@@ -8,4 +8,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Project/Scenes/Menu.unity
     guid: 0dd1ed1e4f6c5e442a9df6583a7a4d90
+  - enabled: 1
+    path: Assets/Project/Scenes/Gallery.unity
+    guid: 9da79955a53f89949a168b2fc87c355a
+  - enabled: 1
+    path: Assets/Project/Scenes/View.unity
+    guid: 04150cff0ec22234e81948cb26a256b6
+  - enabled: 1
+    path: Assets/Project/Scenes/Loading.unity
+    guid: a1b40537fd5a1b94284b6cb07970d0be
   m_configObjects: {}
