@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Project.Scripts
+namespace Project.Scripts.Image
 {
     public class ImageDownloader : MonoBehaviour
     {

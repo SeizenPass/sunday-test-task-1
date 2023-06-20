@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Project.Scripts
+namespace Project.Scripts.Image
 {
     public class SelectedImageLoader : MonoBehaviour
     {

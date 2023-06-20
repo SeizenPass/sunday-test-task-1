@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using Project.Scripts.SceneManagement;
+﻿using Project.Scripts.SceneManagement;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,7 +25,7 @@ namespace Project.Scripts
             val = 1 - val;
 
             slider.value = val;
-            loadingText.text = $"{Mathf.Round(val * 100f)}%";
+            loadingText.text = $"{Mathf.Clamp(Mathf.Round(val * 100f), 0f, 100f)}%";
         }
     }
 }

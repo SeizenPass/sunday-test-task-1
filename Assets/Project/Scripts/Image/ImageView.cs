@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Project.Scripts
+namespace Project.Scripts.Image
 {
     public class ImageView : MonoBehaviour
     {
