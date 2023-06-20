@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Project.Scripts
 {
@@ -16,14 +15,12 @@ namespace Project.Scripts
                 Screen.orientation == ScreenOrientation.PortraitUpsideDown)
             {
                 _currentLayoutMode = LayoutMode.Vertical;
-                SetElementsState(true, LayoutMode.Vertical);
-                SetElementsState(false, LayoutMode.Horizontal);
+                SwitchTo(LayoutMode.Vertical);
             }
             else
             {
                 _currentLayoutMode = LayoutMode.Horizontal;
-                SetElementsState(false, LayoutMode.Vertical);
-                SetElementsState(true, LayoutMode.Horizontal);
+                SwitchTo(LayoutMode.Horizontal);
             }
         }
 
@@ -41,8 +38,7 @@ namespace Project.Scripts
                 
                 _currentLayoutMode = LayoutMode.Vertical;
                 
-                SetElementsState(true, LayoutMode.Vertical);
-                SetElementsState(false, LayoutMode.Horizontal);
+                SwitchTo(LayoutMode.Vertical);
             }
             else
             {
@@ -50,9 +46,14 @@ namespace Project.Scripts
                 
                 _currentLayoutMode = LayoutMode.Horizontal;
 
-                SetElementsState(false, LayoutMode.Vertical);
-                SetElementsState(true, LayoutMode.Horizontal);
+                SwitchTo(LayoutMode.Horizontal);
             }
+        }
+
+        private void SwitchTo(LayoutMode layoutMode)
+        {
+            SetElementsState(layoutMode == LayoutMode.Horizontal, LayoutMode.Horizontal);
+            SetElementsState(layoutMode == LayoutMode.Vertical, LayoutMode.Vertical);
         }
 
         private void SetElementsState(bool elementsActive, LayoutMode layoutMode)

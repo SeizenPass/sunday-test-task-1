@@ -18,7 +18,9 @@ namespace Project.Scripts.SceneManagement
         public float LastLoadActivationTime { get; private set; }
         public float LoadTime => loadTime;
 
-        public Stack<string> _scenesStack = new Stack<string>();
+        private Stack<string> _scenesStack = new();
+
+        private List<string> _path = new();
 
         private void Awake()
         {
@@ -30,6 +32,7 @@ namespace Project.Scripts.SceneManagement
             
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            _path.Add(SceneManager.GetActiveScene().name);
         }
 
         public void LoadScene(string sceneName)
@@ -40,6 +43,7 @@ namespace Project.Scripts.SceneManagement
             void Callback()
             {
                 SceneManager.LoadScene(sceneName);
+                _path.Add(sceneName);
             }
         }
         
@@ -67,14 +71,37 @@ namespace Project.Scripts.SceneManagement
 
         public void GoBack()
         {
-            if (_scenesStack.Count <= 0) return;
-            SceneManager.UnloadSceneAsync(_scenesStack.Pop());
-            LoadLoadingScene(LoadSceneMode.Additive);
-            StartCoroutine(WaitProcess(Callback));
-            
-            void Callback()
+            switch (_scenesStack.Count)
             {
-                SceneManager.UnloadSceneAsync(loadingSceneName);
+                case <= 0 when _path.Count <= 1:
+                    return;
+                case <= 0:
+                {
+                    var targetIndex = _path.Count - 1;
+                    _path.RemoveAt(targetIndex);
+                    LoadLoadingScene();
+                    StartCoroutine(WaitProcess(Callback));
+
+                    void Callback()
+                    {
+                        SceneManager.LoadScene(_path[^1]);
+                    }
+
+                    break;
+                }
+                default:
+                {
+                    LoadLoadingScene(LoadSceneMode.Additive);
+                    SceneManager.UnloadSceneAsync(_scenesStack.Pop());
+                    StartCoroutine(WaitProcess(Callback));
+            
+                    void Callback()
+                    {
+                        SceneManager.UnloadSceneAsync(loadingSceneName);
+                    }
+
+                    break;
+                }
             }
         }
 
