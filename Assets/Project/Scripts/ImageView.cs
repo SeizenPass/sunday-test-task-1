@@ -10,16 +10,18 @@ namespace Project.Scripts
     {
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private GameObject content;
-        [SerializeField] private RawImage imageNodePrefab;
+        [SerializeField] private ImageNode imageNodePrefab;
         [SerializeField] private ImageDownloader imageDownloader;
+        [SerializeField] private string viewSceneName;
 
+        public string ViewSceneName => viewSceneName;
 
-        private Dictionary<int, RawImage> _images;
+        private Dictionary<int, ImageNode> _images;
         private const float LoadPoint = 0.10f;
 
         private void Awake()
         {
-            _images = new Dictionary<int, RawImage>();
+            _images = new Dictionary<int, ImageNode>();
         }
 
         private void Start()
@@ -39,6 +41,9 @@ namespace Project.Scripts
                 
                 var createdImage = Instantiate(imageNodePrefab, content.transform);
                 _images[number] = createdImage;
+                
+                createdImage.Setup(number, this);
+                
                 yield return null;
             }
             
@@ -54,17 +59,14 @@ namespace Project.Scripts
                 return;
             }
 
-            _images[number].texture = texture2D;
+            _images[number].GetComponent<RawImage>().texture = texture2D;
         }
 
         private void Listen(Vector2 val)
         {
-            Debug.Log(val);
-            if (val.y <= LoadPoint)
-            {
-                scrollRect.onValueChanged.RemoveListener(Listen);
-                StartCoroutine(ImageAddition());
-            }
+            if (!(val.y <= LoadPoint)) return;
+            scrollRect.onValueChanged.RemoveListener(Listen);
+            StartCoroutine(ImageAddition());
         }
 
         private void OnDestroy()

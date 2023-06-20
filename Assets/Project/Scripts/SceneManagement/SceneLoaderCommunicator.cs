@@ -6,13 +6,22 @@ namespace Project.Scripts.SceneManagement
     {
         public void LoadScene(string sceneName)
         {
-            if (!SceneLoader.Instance)
-            {
-                Debug.LogError($"No {nameof(SceneLoader)} located");
-                return;
-            }
-            
+            if (!Valid) return;
             SceneLoader.Instance.LoadScene(sceneName);
         }
+
+        public void LoadSceneOnTop(string sceneName)
+        {
+            if (!Valid) return; 
+            SceneLoader.Instance.LoadSceneOnTop(sceneName);
+        }
+
+        private void GoBack()
+        {
+            if (!Valid) return;
+            SceneLoader.Instance.GoBack();
+        }
+
+        private bool Valid => SceneLoader.Instance;
     }
 }

@@ -17,9 +17,12 @@ namespace Project.Scripts
 
         private int _currentNumber;
 
+        private static Dictionary<int, Texture2D> _textures;
+
         private void Awake()
         {
             _currentNumber = startAt;
+            _textures = new Dictionary<int, Texture2D>();
         }
 
         public int GetNewImage()
@@ -45,9 +48,15 @@ namespace Project.Scripts
                 else
                 {
                     var texture = DownloadHandlerTexture.GetContent(uwr);
+                    _textures[number] = texture;
                     ImageDownloadedEvent?.Invoke(number, texture, true);
                 }
             }
+        }
+
+        public static Texture2D GetLoadedTexture(int number)
+        {
+            return _textures[number];
         }
     }
 }

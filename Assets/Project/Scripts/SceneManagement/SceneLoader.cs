@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,6 +18,8 @@ namespace Project.Scripts.SceneManagement
         public float LastLoadActivationTime { get; private set; }
         public float LoadTime => loadTime;
 
+        public Stack<string> _scenesStack = new Stack<string>();
+
         private void Awake()
         {
             if (Instance != null)
@@ -31,17 +34,54 @@ namespace Project.Scripts.SceneManagement
 
         public void LoadScene(string sceneName)
         {
-            LastLoadActivationTime = Time.time;
-            SceneManager.LoadScene(loadingSceneName);
-
-            IEnumerator WaitProcess()
+            LoadLoadingScene();
+            StartCoroutine(WaitProcess(Callback));
+            
+            void Callback()
             {
-                yield return new WaitForSeconds(loadTime);
-
                 SceneManager.LoadScene(sceneName);
             }
+        }
+        
+        private IEnumerator WaitProcess(Action callback)
+        {
+            yield return new WaitForSeconds(loadTime);
 
-            StartCoroutine(WaitProcess());
+            callback?.Invoke();
+        }
+
+        public void LoadSceneOnTop(string sceneName)
+        {
+            LoadLoadingScene(LoadSceneMode.Additive);
+            StartCoroutine(WaitProcess(Callback));
+            
+            void Callback()
+            {
+                SceneManager.UnloadSceneAsync(loadingSceneName).completed += _ =>
+                {
+                    SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+                    _scenesStack.Push(sceneName);
+                };
+            }
+        }
+
+        public void GoBack()
+        {
+            if (_scenesStack.Count <= 0) return;
+            SceneManager.UnloadSceneAsync(_scenesStack.Pop());
+            LoadLoadingScene(LoadSceneMode.Additive);
+            StartCoroutine(WaitProcess(Callback));
+            
+            void Callback()
+            {
+                SceneManager.UnloadSceneAsync(loadingSceneName);
+            }
+        }
+
+        private void LoadLoadingScene(LoadSceneMode loadSceneMode = LoadSceneMode.Single)
+        {
+            LastLoadActivationTime = Time.time;
+            SceneManager.LoadScene(loadingSceneName, loadSceneMode);
         }
     }
 }
