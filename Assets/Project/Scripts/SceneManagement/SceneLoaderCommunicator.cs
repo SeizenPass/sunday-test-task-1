@@ -16,7 +16,7 @@ namespace Project.Scripts.SceneManagement
             SceneLoader.Instance.LoadSceneOnTop(sceneName);
         }
 
-        private void GoBack()
+        public void GoBack()
         {
             if (!Valid) return;
             SceneLoader.Instance.GoBack();
